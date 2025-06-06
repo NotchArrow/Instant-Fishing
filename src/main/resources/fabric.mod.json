@@ -3,15 +3,15 @@
 	"id": "instant-fishing",
 	"version": "${version}",
 	"name": "Instant Fishing",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Instant Fish Catching and Other Tweaks",
 	"authors": [
-		"Me!"
+		"NotchArrow"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/NotchArrow/Instant-Fishing",
+		"sources": "https://github.com/NotchArrow/Instant-Fishing"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/instant-fishing/icon.png",
 	"environment": "*",
 	"entrypoints": {
