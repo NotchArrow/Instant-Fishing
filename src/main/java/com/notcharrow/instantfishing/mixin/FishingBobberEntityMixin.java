@@ -22,11 +22,16 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.context.LootWorldContext;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.LootCommand;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -95,8 +100,8 @@ public abstract class FishingBobberEntityMixin extends Entity {
 
 				for (ItemStack stack : loot) {
 					if (!stack.isEmpty()) {
-						ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-						itemEntity.setPickupDelay(40);
+						ItemEntity itemEntity = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack);
+						itemEntity.setPickupDelay(0);
 						world.spawnEntity(itemEntity);
 					}
 				}
@@ -105,6 +110,8 @@ public abstract class FishingBobberEntityMixin extends Entity {
 				ExperienceOrbEntity xpOrb = new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), xp);
 				world.spawnEntity(xpOrb);
 				player.getMainHandStack().damage(1, player);
+
+				world.playSound(this, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS);
 
 				this.discard();
 				ci.cancel();
