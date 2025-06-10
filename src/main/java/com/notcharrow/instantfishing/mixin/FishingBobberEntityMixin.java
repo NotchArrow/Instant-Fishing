@@ -32,6 +32,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -109,7 +110,12 @@ public abstract class FishingBobberEntityMixin extends Entity {
 				int xp = player.getWorld().getRandom().nextInt(ConfigManager.config.maxCatchXP) + 1;
 				ExperienceOrbEntity xpOrb = new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), xp);
 				world.spawnEntity(xpOrb);
-				player.getMainHandStack().damage(1, player);
+
+				if (player.getMainHandStack().willBreakNextUse()) {
+					player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+				} else {
+					player.getMainHandStack().damage(1, player);
+				}
 
 				world.playSound(this, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS);
 
