@@ -24,6 +24,7 @@ import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.context.LootWorldContext;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
@@ -99,6 +100,11 @@ public abstract class FishingBobberEntityMixin extends Entity {
 
 				List<ItemStack> loot = lootTable.generateLoot(lootWorldContext);
 
+				if (ConfigManager.config.randomItem) {
+					loot.clear();
+					loot.add(new ItemStack(Registries.ITEM.get(random.nextInt(Registries.ITEM.size()))));
+				}
+
 				for (ItemStack stack : loot) {
 					if (!stack.isEmpty()) {
 						ItemEntity itemEntity = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack);
@@ -117,7 +123,8 @@ public abstract class FishingBobberEntityMixin extends Entity {
 					player.getMainHandStack().damage(1, player);
 				}
 
-				world.playSound(this, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS);
+				world.playSound(this, pos.getX(), pos.getY(), pos.getZ(),
+						SoundEvents.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS, 0.25f, 1.0f);
 
 				this.discard();
 				ci.cancel();
