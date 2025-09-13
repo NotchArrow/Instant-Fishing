@@ -7,29 +7,18 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ExperienceOrbEntity;
-import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.context.LootWorldContext;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.loot.context.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.LootCommand;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -92,13 +81,19 @@ public abstract class FishingBobberEntityMixin extends Entity {
 					}
 				}
 
-				LootWorldContext lootWorldContext = (new LootWorldContext.Builder(((ServerWorld) player.getWorld()).toServerWorld()))
-						.add(LootContextParameters.ORIGIN, Vec3d.ofCenter(pos))
-						.add(LootContextParameters.TOOL, player.getMainHandStack())
-						.add(LootContextParameters.THIS_ENTITY, player)
-						.build(LootContextTypes.FISHING);
+				Map<LootContextParameter<?>, Object> parameters = new HashMap<>();
+				parameters.put(LootContextParameters.ORIGIN, Vec3d.ofCenter(pos));
+				parameters.put(LootContextParameters.TOOL, player.getMainHandStack());
+				parameters.put(LootContextParameters.THIS_ENTITY, player);
 
-				List<ItemStack> loot = lootTable.generateLoot(lootWorldContext);
+				LootContextParameterSet lootContext = new LootContextParameterSet(
+						world,
+						parameters,
+						Collections.emptyMap(),
+						EnchantmentHelper.getFishingLuckBonus(world, player.getMainHandStack(), player)
+				);
+
+				List<ItemStack> loot = lootTable.generateLoot(lootContext);
 
 				if (ConfigManager.config.randomItem) {
 					loot.clear();
@@ -117,13 +112,13 @@ public abstract class FishingBobberEntityMixin extends Entity {
 				ExperienceOrbEntity xpOrb = new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), xp);
 				world.spawnEntity(xpOrb);
 
-				if (player.getMainHandStack().willBreakNextUse()) {
+				if (player.getMainHandStack().getMaxDamage() - player.getMainHandStack().getDamage() <= 1) {
 					player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 				} else {
-					player.getMainHandStack().damage(1, player);
+					player.getMainHandStack().damage(1, player, EquipmentSlot.MAINHAND);
 				}
 
-				world.playSound(this, pos.getX(), pos.getY(), pos.getZ(),
+				world.playSound(this.getPlayerOwner(), pos.getX(), pos.getY(), pos.getZ(),
 						SoundEvents.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS, 0.25f, 1.0f);
 
 				this.discard();
