@@ -6,8 +6,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ExperienceOrbEntity;
@@ -18,18 +16,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.context.LootWorldContext;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.LootCommand;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -57,9 +50,9 @@ public abstract class FishingBobberEntityMixin extends Entity {
 	private void onTickFishingLogic(BlockPos pos, CallbackInfo ci) {
 		PlayerEntity player = this.getPlayerOwner();
 		if (player != null && ConfigManager.config.modEnabled) {
-			MinecraftServer server = player.getServer();
+			MinecraftServer server = player.getEntityWorld().getServer();
 			if (server != null) {
-				ServerWorld world = (ServerWorld) player.getWorld();
+				ServerWorld world = (ServerWorld) player.getEntityWorld();
 				Random random = new Random();
 
 				LootTable lootTable;
@@ -92,7 +85,7 @@ public abstract class FishingBobberEntityMixin extends Entity {
 					}
 				}
 
-				LootWorldContext lootWorldContext = (new LootWorldContext.Builder(((ServerWorld) player.getWorld()).toServerWorld()))
+				LootWorldContext lootWorldContext = (new LootWorldContext.Builder(((ServerWorld) player.getEntityWorld()).toServerWorld()))
 						.add(LootContextParameters.ORIGIN, Vec3d.ofCenter(pos))
 						.add(LootContextParameters.TOOL, player.getMainHandStack())
 						.add(LootContextParameters.THIS_ENTITY, player)
@@ -113,7 +106,7 @@ public abstract class FishingBobberEntityMixin extends Entity {
 					}
 				}
 
-				int xp = player.getWorld().getRandom().nextInt(ConfigManager.config.maxCatchXP) + 1;
+				int xp = player.getEntityWorld().getRandom().nextInt(ConfigManager.config.maxCatchXP) + 1;
 				ExperienceOrbEntity xpOrb = new ExperienceOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), xp);
 				world.spawnEntity(xpOrb);
 
