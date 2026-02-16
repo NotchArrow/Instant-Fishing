@@ -19,7 +19,7 @@ public class InstantFishingModMenu implements ModMenuApi {
 	private Screen createConfigScreen(Screen parent) {
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
-				.setTitle(Text.of("Enchantments Unbound Config"));
+				.setTitle(Text.of("Instant Fishing Config"));
 
 		addSettings(builder);
 
