@@ -6,5 +6,5 @@ public class InstantFishingConfig {
 	public boolean randomLootTable = false;
 	public boolean randomItem = false;
 	public boolean overrideTreasureChance = false;
-	public int treasureChance = 100;
+	public double treasureChance = 100.0;
 }

@@ -17,7 +17,10 @@
 	"entrypoints": {
 		"main": [
 			"com.notcharrow.instantfishing.InstantFishing"
-		]
+		],
+        "modmenu": [
+            "com.notcharrow.instantfishing.modmenu.InstantFishingModMenu"
+        ]
 	},
 	"mixins": [
 		"instant-fishing.mixins.json"
@@ -28,7 +31,8 @@
 		"java": ">=21",
 		"fabric-api": "*"
 	},
-	"suggests": {
-		"another-mod": "*"
-	}
+    "suggests": {
+        "cloth-config": "*",
+        "modmenu": "*"
+    }
 }
