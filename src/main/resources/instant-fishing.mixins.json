@@ -3,7 +3,7 @@
 	"package": "com.notcharrow.instantfishing.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-      "FishingBobberEntityMixin"
+      "FishingHookMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

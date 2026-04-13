@@ -5,8 +5,8 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
@@ -19,7 +19,7 @@ public class InstantFishingModMenu implements ModMenuApi {
 	private Screen createConfigScreen(Screen parent) {
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
-				.setTitle(Text.of("Instant Fishing Config"));
+				.setTitle(Component.literal("Instant Fishing Config"));
 
 		addSettings(builder);
 
@@ -27,7 +27,7 @@ public class InstantFishingModMenu implements ModMenuApi {
 	}
 
 	private static void addSettings(ConfigBuilder builder) {
-		ConfigCategory generalSettings = builder.getOrCreateCategory(Text.of("General Settings"));
+		ConfigCategory generalSettings = builder.getOrCreateCategory(Component.literal("General Settings"));
 
 		addBoolean(generalSettings, "Mod Enabled", "Main toggle for the mod",
 				ConfigManager.config.modEnabled,
@@ -56,8 +56,8 @@ public class InstantFishingModMenu implements ModMenuApi {
 
 	private static void addBoolean(ConfigCategory category, String label, String tooltip, boolean currentValue, Consumer<Boolean> onSave) {
 		category.addEntry(
-				ConfigBuilder.create().entryBuilder().startBooleanToggle(Text.of(label), currentValue)
-						.setTooltip(Text.of(tooltip))
+				ConfigBuilder.create().entryBuilder().startBooleanToggle(Component.literal(label), currentValue)
+						.setTooltip(Component.literal(tooltip))
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(onSave)
 						.build()
@@ -66,8 +66,8 @@ public class InstantFishingModMenu implements ModMenuApi {
 
 	private static void addInteger(ConfigCategory category, String label, String tooltip, int currentValue, Consumer<Integer> onSave, int min, int max) {
 		category.addEntry(
-				ConfigBuilder.create().entryBuilder().startIntField(Text.of(label), currentValue)
-						.setTooltip(Text.of(tooltip))
+				ConfigBuilder.create().entryBuilder().startIntField(Component.literal(label), currentValue)
+						.setTooltip(Component.literal(tooltip))
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(newValue -> {
 							newValue = Math.clamp(newValue, min, max);
@@ -80,8 +80,8 @@ public class InstantFishingModMenu implements ModMenuApi {
 
 	private static void addDouble(ConfigCategory category, String label, String tooltip, double currentValue, Consumer<Double> onSave, double min, double max) {
 		category.addEntry(
-				ConfigBuilder.create().entryBuilder().startDoubleField(Text.of(label), currentValue)
-						.setTooltip(Text.of(tooltip))
+				ConfigBuilder.create().entryBuilder().startDoubleField(Component.literal(label), currentValue)
+						.setTooltip(Component.literal(tooltip))
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(newValue -> {
 							newValue = Math.clamp(newValue, min, max);
