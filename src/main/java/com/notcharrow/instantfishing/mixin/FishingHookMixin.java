@@ -89,7 +89,7 @@ public abstract class FishingHookMixin extends Entity {
 				}
 
 				LootParams lootParams = new LootParams.Builder((ServerLevel) world)
-						.withParameter(LootContextParams.ORIGIN, pos.getCenter())
+						.withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()))
 						.withParameter(LootContextParams.TOOL, player.getMainHandItem())
 						.withParameter(LootContextParams.THIS_ENTITY, player)
 						.create(LootContextParamSets.FISHING);
